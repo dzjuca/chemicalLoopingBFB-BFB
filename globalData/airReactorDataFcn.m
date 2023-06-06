@@ -4,6 +4,8 @@ function Global = airReactorDataFcn(Global)
     % ----------------------------| input |--------------------------------
     % ----------------------------| output |-------------------------------            
 % -------------------------------------------------------------------------
+    TEMPERATURE_AIR_REACTOR = 800 + 273.15;%Temp. of air reactor        [K]
+
     MOLAR_FLOW = 10; %                                              [mol/H]
     RATIO_O2 = 0.21; % ratio of O2 in the air                           [%]
     RATIO_N2 = 0.79; % ratio of N2 in the air                           [%]
@@ -12,7 +14,11 @@ function Global = airReactorDataFcn(Global)
     RATIO_NI  = 0.18;   % ratio of Ni in the solid                      [%]
     RATIO_NIO = 0.00;   % ratio of NiO in the solid                     [%]
     RATIO_AL2O3 = 0.82; % ratio of Al2O3 in the solid                   [%]
+
+    W_DP = 300.0; % catalyst weight in the dense phase                  [g]
+    W_LP = 0.000; % catalyst weight in the lean phase                   [g]
 % ----------| Reactor 1 Air Reactor  |-------------------------------------
+    Global.airReactor.T_AR       = TEMPERATURE_AIR_REACTOR;
     Global.airReactor.gen        = 2; % gas species number              [#]
     Global.airReactor.sen        = 3; % solid species number            [#]
     Global.airReactor.Num_sp_dp  = 10;% number of species               [#] 
@@ -46,20 +52,32 @@ function Global = airReactorDataFcn(Global)
     Global.airReactor.streamSolid.composition.Al2O3 = s_Al2O3_c; % [gAl2O3/g-c]
     Global.airReactor.streamSolid.massFlow   = s_mFlow;          %    [g/s]
     Global.airReactor.streamSolid.molarFlow  = s_molFlow;        %  [mol/s]
-
 % ---------- reactor constant data  ---------------------------------------
-    Global.airReactor.reactor.rID_dp = 4;% internal diameter dense p.  [cm]
-    Global.airReactor.reactor.rID_lp = 4;% internal diameter lean p.   [cm]
+    Global.airReactor.rID_dp = 4.0;% internal diameter dense p.        [cm]
+    Global.airReactor.rID_lp = 4.0;% internal diameter lean p.         [cm]
+    Global.airReactor.H_dp = 23.0; % bed height                        [cm]
+    Global.airReactor.H_lp = 0.00; % bed height                        [cm]
+    Global.airReactor.H_t  = 94.0; % reactor height                    [cm]
 
-    %%%%% te quedas aqui
-    Global.reactor.bHeight = 23; % bed height                          [cm]
-    Global.reactor.rHeight = 94; % reactor height                    [cm]
-    Global.reactor.rArea1  = pi*(Global.reactor.rID/2)^2; % area    [cm2]
-    Global.reactor.z1      = linspace(0,                       ...
-                                Global.reactor.bHeight,      ...
-                                Global.n1)'; % mesh                [cm]
-    Global.reactor.z2      = linspace(Global.reactor.bHeight,  ...
-                                    Global.reactor.rHeight,  ...
-                                    Global.n2)'; % mesh2           [cm]
+    Global.airReactor.Area_dp = pi*(Global.airReactor.rID_dp/2)^2; %  [cm2]
+    Global.airReactor.Area_lp = pi*(Global.airReactor.rID_lp/2)^2; %  [cm2]
+    Global.airReactor.z_dp    = linspace(0,                       ...
+                                Global.airReactor.H_dp,           ...
+                                Global.airReactor.n1)';      % dp_mesh [cm]
+    Global.airReactor.z_lp    = linspace(Global.airReactor.H_dp,  ...
+                                Global.airReactor.H_t,            ...
+                                Global.airReactor.n2)';      % lp_mesh [cm]
+% -------------------------------------------------------------------------
+    Global.airReactor.W_dp = W_DP;  % catalyst weight                   [g]
+    Global.airReactor.W_lp = W_LP;  % catalyst weight                   [g]
+    Global.airReactor.W_t  = W_DP + W_LP;  % catalyst weight            [g]
+% ---------- fluid Dynamics -----------------------------------------------
+    Global.airReactor.fDynamics.usg0  = ...
+                            g_volFlow/(Global.airReactor.Area_dp);%  [cm/s]
+    Global.airReactor.fDynamics.fw  = 0.15;  % fraction-wake in bubbles  []
+    Global.airReactor.fDynamics.Emf = 0.45;  % minimum fluid. porosity   []
+    Global.airReactor.fDynamics.a_u0  = 7;   %                        [s-1]
+    Global.airReactor.fDynamics.f_d   = 0.3; %                           []
+    Global.airReactor.fDynamics.Pe_ax = 6;   % Axial Peclet Number       []
 % -------------------------------------------------------------------------
 end
