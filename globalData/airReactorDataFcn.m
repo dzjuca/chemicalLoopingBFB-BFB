@@ -17,8 +17,11 @@ function Global = airReactorDataFcn(Global)
 
     W_DP = 300.0; % catalyst weight in the dense phase                  [g]
     W_LP = 0.000; % catalyst weight in the lean phase                   [g]
+
+    GAS_SPECIES   = {'O2','N2'}; % gas species name                     [#]
+    SOLID_SPECIES = {'Ni','NiO','Al2O3'}; % solid species               [#]
 % ----------| Reactor 1 Air Reactor  |-------------------------------------
-    Global.airReactor.T_AR       = TEMPERATURE_AIR_REACTOR;
+    Global.airReactor.T          = TEMPERATURE_AIR_REACTOR;
     Global.airReactor.gen        = 2; % gas species number              [#]
     Global.airReactor.sen        = 3; % solid species number            [#]
     Global.airReactor.Num_sp_dp  = 10;% number of species               [#] 
@@ -26,6 +29,8 @@ function Global = airReactorDataFcn(Global)
     Global.airReactor.n1         = 40;% mesh points number              [#] 
     Global.airReactor.n2         = 0; % mesh points number              [#]
     Global.airReactor.nt = Global.airReactor.n1 + Global.airReactor.n2; 
+    Global.airReactor.gasSpecies   = GAS_SPECIES;
+    Global.airReactor.solidSpecies = SOLID_SPECIES;
 % ----------| Flow rate and concentration of species |---------------------
 % ----- total feed flow in the reactor's bottom ---------------------------
     g_molFlow   = (MOLAR_FLOW/3600);   % 0.010782;                  [mol/s]
