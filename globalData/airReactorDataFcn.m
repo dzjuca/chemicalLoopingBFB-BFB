@@ -80,7 +80,6 @@ function Global = airReactorDataFcn(Global)
     Global.airReactor.fDynamics.usg0  = ...
                             g_volFlow/(Global.airReactor.Area_dp);%  [cm/s]
     Global.airReactor.fDynamics.fw  = 0.15;  % fraction-wake in bubbles  []
-    Global.airReactor.fDynamics.Emf = 0.45;  % minimum fluid. porosity   []
     Global.airReactor.fDynamics.a_u0  = 7;   %                        [s-1]
     Global.airReactor.fDynamics.f_d   = 0.3; %                           []
     Global.airReactor.fDynamics.Pe_ax = 6;   % Axial Peclet Number       []

@@ -17,8 +17,11 @@ function Global = fuelReactorDataFcn(Global)
 
     W_DP = 300.0; % catalyst weight in the dense phase                  [g]
     W_LP = 0.000; % catalyst weight in the lean phase                   [g]
+
+    GAS_SPECIES   = {'O2','N2'}; % gas species name                     [#]
+    SOLID_SPECIES = {'Ni','NiO','Al2O3'}; % solid species               [#]
 % ----------| Reactor 2 Fuel Reactor |-------------------------------------
-    Global.fuelReactor.T_FR       = TEMPERATURE_FUEL_REACTOR;
+    Global.fuelReactor.T          = TEMPERATURE_FUEL_REACTOR;
     Global.fuelReactor.gen        = 2; % gas species number           [#]
     Global.fuelReactor.sen        = 3; % solid species number         [#]
     Global.fuelReactor.Num_sp_dp  = 10;% number of species            [#] 
@@ -26,6 +29,8 @@ function Global = fuelReactorDataFcn(Global)
     Global.fuelReactor.n1         = 40;% mesh points number           [#] 
     Global.fuelReactor.n2         = 0; % mesh points number           [#]
     Global.fuelReactor.nt = Global.fuelReactor.n1 + Global.fuelReactor.n2; 
+    Global.fuelReactor.gasSpecies   = GAS_SPECIES;
+    Global.fuelReactor.solidSpecies = SOLID_SPECIES;         
 % ----------| Flow rate and concentration of species |---------------------
 % ----- total feed flow in the reactor's bottom ---------------------------
     g_molFlow   = (MOLAR_FLOW/3600);   % 0.010782;                  [mol/s]
@@ -33,7 +38,7 @@ function Global = fuelReactorDataFcn(Global)
     g_O2_r      = RATIO_O2;            % ratio                          [%]
     g_N2_r      = RATIO_N2;            % ratio                          [%]
     g_O2_c      = g_O2_r*g_molFlow/g_volFlow;%                 [mol O2/cm3]   
-    g_N2_c      = g_N2_r*g_molFlow/g_volFlow;%                 [mol N2/cm3]        
+    g_N2_c      = g_N2_r*g_molFlow/g_volFlow;%                 [mol N2/cm3]      
 % -------------------------------------------------------------------------
     Global.fuelReactor.streamGas.composition.O2  = g_O2_c; %      [mol/cm3]
     Global.fuelReactor.streamGas.composition.N2  = g_N2_c; %      [mol/cm3]
@@ -75,7 +80,6 @@ function Global = fuelReactorDataFcn(Global)
     Global.fuelReactor.fDynamics.usg0  = ...
     g_volFlow/(Global.fuelReactor.Area_dp);%  [cm/s]
     Global.fuelReactor.fDynamics.fw  = 0.15;  % fraction-wake in bubbles []
-    Global.fuelReactor.fDynamics.Emf = 0.45;  % minimum fluid. porosity  []
     Global.fuelReactor.fDynamics.a_u0  = 7;   %                       [s-1]
     Global.fuelReactor.fDynamics.f_d   = 0.3; %                          []
     Global.fuelReactor.fDynamics.Pe_ax = 6;   % Axial Peclet Number      []

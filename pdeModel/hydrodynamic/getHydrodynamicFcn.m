@@ -22,33 +22,26 @@ function Global = getHydrodynamicFcn(fluidizedType, reactorType, Global)
 % -------------------------------------------------------------------------
         Emf   = EmfFcn(fluidizedType, Global);
         umf   = umfFcn(Cgas, T, gasSpecies, fluidizedType, Global);
-        
-        % te quedas aqui
-        ut    = terminalVelocityFcn(Cgas, T, Global);
-        db    = bubbleDiameterFcn(umf, Global);
-        ub    = bubbleVelocityFcn(umf, db, Global);
-        alpha = alphaFcn(ub, umf, Global);
-        us    = solidBedVelocityFcn(ub, alpha, Global);
-        ue    = emulsionBedVelocityFcn(us, umf, Emf, Global);
+        ut    = terminalVelocityFcn(Cgas, T, gasSpecies, Global);
+        db    = bubbleDiameterFcn(umf, reactorType, Global);
+        ub    = bubbleVelocityFcn(umf, db, reactorType, Global);
+        alpha = alphaFcn(ub, umf, reactorType, Global);
+        us    = solidBedVelocityFcn(ub, alpha, reactorType, Global);
+        ue    = emulsionBedVelocityFcn(us, umf, Emf);
     
     elseif strcmp(fluidizedType, 'PC')
 
     elseif strcmp(fluidizedType, 'FF')
 
     end
-
-
 % -------------------------------------------------------------------------
-    Global.fDynamics.Emf   = Emf;
-    Global.fDynamics.umf   = umf;
-    Global.fDynamics.ut    = ut;
-    Global.fDynamics.db    = db;
-    Global.fDynamics.ub    = ub;
-    Global.fDynamics.alpha = alpha;
-    Global.fDynamics.us    = us;
-    Global.fDynamics.ue    = ue;
-% -------------------------------------------------------------------------
-
-% -------------------------------------------------------------------------
+    Global.(reactorType).fDynamics.Emf   = Emf;
+    Global.(reactorType).fDynamics.umf   = umf;
+    Global.(reactorType).fDynamics.ut    = ut;
+    Global.(reactorType).fDynamics.db    = db;
+    Global.(reactorType).fDynamics.ub    = ub;
+    Global.(reactorType).fDynamics.alpha = alpha;
+    Global.(reactorType).fDynamics.us    = us;
+    Global.(reactorType).fDynamics.ue    = ue;
 % -------------------------------------------------------------------------
 end
