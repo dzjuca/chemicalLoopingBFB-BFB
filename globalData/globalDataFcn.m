@@ -46,4 +46,5 @@ function Global = globalDataFcn()
       Global = airReactorDataFcn(Global);
       Global = fuelReactorDataFcn(Global);
 % -------------------------------------------------------------------------
+      Global.NoN = Global.airReactor.NoN + Global.fuelReactor.NoN;
 end

@@ -12,7 +12,7 @@ function Global = airReactorDataFcn(Global)
 
     MASS_FLOW = 3.0;    %                                            [kg/h]
     RATIO_NI  = 0.18;   % ratio of Ni in the solid                      [%]
-    RATIO_NIO = 0.00;   % ratio of NiO in the solid                     [%]
+    RATIO_NIO = 1e-10;  % ratio of NiO in the solid                     [%] ==> To avoid division by zero
     RATIO_AL2O3 = 0.82; % ratio of Al2O3 in the solid                   [%]
 
     W_DP = 300.0; % catalyst weight in the dense phase                  [g]
@@ -20,14 +20,17 @@ function Global = airReactorDataFcn(Global)
 
     GAS_SPECIES   = {'O2','N2'}; % gas species name                     [#]
     SOLID_SPECIES = {'Ni','NiO','Al2O3'}; % solid species               [#]
+
+    MESH_POINTS_DP = 40; % number of mesh points in the dense phase     [#]
+    MESH_POINTS_LP = 0;  % number of mesh points in the lean phase      [#]
 % ----------| Reactor 1 Air Reactor  |-------------------------------------
     Global.airReactor.T          = TEMPERATURE_AIR_REACTOR;
     Global.airReactor.gen        = 2; % gas species number              [#]
     Global.airReactor.sen        = 3; % solid species number            [#]
     Global.airReactor.Num_sp_dp  = 10;% number of species               [#] 
     Global.airReactor.Num_sp_lp  = 0; % number of species               [#]
-    Global.airReactor.n1         = 40;% mesh points number              [#] 
-    Global.airReactor.n2         = 0; % mesh points number              [#]
+    Global.airReactor.n1         = MESH_POINTS_DP;
+    Global.airReactor.n2         = MESH_POINTS_LP;
     Global.airReactor.nt = Global.airReactor.n1 + Global.airReactor.n2; 
     Global.airReactor.gasSpecies   = GAS_SPECIES;
     Global.airReactor.solidSpecies = SOLID_SPECIES;
@@ -83,5 +86,9 @@ function Global = airReactorDataFcn(Global)
     Global.airReactor.fDynamics.a_u0  = 7;   %                        [s-1]
     Global.airReactor.fDynamics.f_d   = 0.3; %                           []
     Global.airReactor.fDynamics.Pe_ax = 6;   % Axial Peclet Number       []
+% -------------------------------------------------------------------------
+    NoN_1 = Global.airReactor.n1*Global.airReactor.Num_sp_dp;
+    NoN_2 = Global.airReactor.n2*Global.airReactor.Num_sp_lp;
+    Global.airReactor.NoN  = NoN_1 + NoN_2; % total number of nodes      []
 % -------------------------------------------------------------------------
 end

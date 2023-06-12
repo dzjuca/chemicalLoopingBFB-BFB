@@ -12,7 +12,7 @@ function Global = fuelReactorDataFcn(Global)
 
     MASS_FLOW = 3.0;    %                                            [kg/h]
     RATIO_NI  = 0.18;   % ratio of Ni in the solid                      [%]
-    RATIO_NIO = 0.00;   % ratio of NiO in the solid                     [%]
+    RATIO_NIO = 1e-10;  % ratio of NiO in the solid                     [%] ==> To avoid division by zero
     RATIO_AL2O3 = 0.82; % ratio of Al2O3 in the solid                   [%]
 
     W_DP = 300.0; % catalyst weight in the dense phase                  [g]
@@ -83,5 +83,9 @@ function Global = fuelReactorDataFcn(Global)
     Global.fuelReactor.fDynamics.a_u0  = 7;   %                       [s-1]
     Global.fuelReactor.fDynamics.f_d   = 0.3; %                          []
     Global.fuelReactor.fDynamics.Pe_ax = 6;   % Axial Peclet Number      []
+% -------------------------------------------------------------------------
+    NoN_1 = Global.fuelReactor.n1*Global.fuelReactor.Num_sp_dp;
+    NoN_2 = Global.fuelReactor.n2*Global.fuelReactor.Num_sp_lp;
+    Global.fuelReactor.NoN  = NoN_1 + NoN_2; % total number of nodes     []
 % -------------------------------------------------------------------------
 end
