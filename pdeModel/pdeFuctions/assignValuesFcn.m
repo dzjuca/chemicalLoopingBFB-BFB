@@ -1,10 +1,16 @@
-function varargout = assignValuesFcn(u, Global, id)
+function varargout = assignValuesFcn(u, reactorType, Global, id)
+% -------------------------------------------------------------------------
+    % assignValuesFcn function 
+    % ----------------------------| input |--------------------------------
+    % ----------------------------| output |-------------------------------
+% -------------------------------------------------------------------------
 
-    sen = Global.sen;
-    gen = Global.gen;
-    n1   = Global.n1;
-    n2   = Global.n2;
+    sen = Global.(reactorType).sen;
+    gen = Global.(reactorType).gen;
+    n1  = Global.(reactorType).n1;
+    n2  = Global.(reactorType).n2;
 
+% -------------------------------------------------------------------------
 
     if strcmp(id,'gas_bubble')
         index_1   = gen;
@@ -44,11 +50,13 @@ function varargout = assignValuesFcn(u, Global, id)
 
     end
 
+% -------------------------------------------------------------------------
 
     for i = 1:index_1
 
         varargout{i} =  u_x((i - 1)*index_2+1:i*index_2);
 
     end
+% -------------------------------------------------------------------------
 
 end

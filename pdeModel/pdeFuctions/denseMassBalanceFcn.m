@@ -1,37 +1,95 @@
-function mb_dp = denseMassBalanceFcn(u, Tbed, Global)
+function mb_dp = denseMassBalanceFcn(u, Tbed, reactorType, Global)
 % -------------------------------------------------------------------------
 % -------------------------------------------------------------------------
 % --------------------| constants values |---------------------------------
-    index1  = Global.n1;
+    index1 = Global.(reactorType).n1;  % =======> borrar
+    n1           = Global.(reactorType).n1;
+    gen          = Global.(reactorType).gen;
+    sen          = Global.(reactorType).sen;
+    gasSpecies   = Global.(reactorType).gasSpecies;
+    solidSpecies = Global.(reactorType).solidSpecies;
 % ---------- bubble - ubFcn.m ---------------------------------------------
-    ub    = Global.fDynamics.ub;
-    db    = Global.fDynamics.db;
-    us    = Global.fDynamics.us;
-    ue    = Global.fDynamics.ue;
-    alpha = Global.fDynamics.alpha;
+    ub    = Global.(reactorType).fDynamics.ub;
+    db    = Global.(reactorType).fDynamics.db;
+    us    = Global.(reactorType).fDynamics.us;
+    ue    = Global.(reactorType).fDynamics.ue;
+    alpha = Global.(reactorType).fDynamics.alpha;
 % --------------------| Boundary Conditions Dense Phase |------------------
-    [gas.bubble, C_g_b]   = bc_dp_gb_Fcn (u, Global); 
-    [gas.emulsion, C_g_e] = bc_dp_ge_Fcn (u, Global); 
-    [solid, C_s_w, C_s_e] = bc_dp_swe_Fcn(u, Global); 
-% ---------- concentrations dense phase vector ----------------------------
-    g1b = gas.bubble.g1b;   
-    g2b = gas.bubble.g2b;   
-
-    g1e = gas.emulsion.g1e; 
-    g2e = gas.emulsion.g2e; 
-
-    s1w = solid.wake.s1w;   
-    s2w = solid.wake.s2w;   
-    s3w = solid.wake.s3w;
-
-    s1e = solid.emulsion.s1e; 
-    s2e = solid.emulsion.s2e; 
-    s3e = solid.emulsion.s3e;
-
+    [gas.bubble, C_g_b]   = bc_dp_gb_Fcn (u, reactorType, Global); 
+    [gas.emulsion, C_g_e] = bc_dp_ge_Fcn (u, reactorType, Global); 
+    [solid, C_s_w, C_s_e] = bc_dp_swe_Fcn(u, reactorType, Global); 
 % -------------------------------------------------------------------------
     C_gs_dp.C_g_b = C_g_b; C_gs_dp.C_g_e = C_g_e;
     C_gs_dp.C_s_w = C_s_w; C_gs_dp.C_s_e = C_s_e;
+% ---------- concentrations dense phase vector ----------------------------
+    
+    gb_fn  = fieldnames(gas.bubble);
+    ge_fn  = fieldnames(gas.emulsion);
+    sw_fn  = fieldnames(solid.wake);
+    se_fn  = fieldnames(solid.emulsion);
+    g_name = cell(1, gen);
+    s_name = cell(1, sen);
+    
+    gb = zeros(n1, gen);
+    ge = zeros(n1, gen);
+    sw = zeros(n1, sen);
+    se = zeros(n1, sen);
+    
+    for i = 1:gen
+    
+        gb(:,i) = gas.bubble.(gb_fn{i});
+        ge(:,i) = gas.emulsion.(ge_fn{i});
+      
+    end
+    
+    for i = 1:sen
+    
+        sw(:,i) = solid.wake.(sw_fn{i});
+        se(:,i) = solid.emulsion.(se_fn{i});
+      
+    end
 % --------------------| Mass Balance - Gas - Bubble & Wake Phase | --------
+
+% continuar desde aqui % XXXXXXXXXXXX==========================================> desde aquí
+
+
+    variable_name = sprintf('variable_%d', i);
+    eval([variable_name ' = i^2']);
+
+        % Nombre de la estructura
+    structName = 'miEstructura';
+    
+    % Campo al que deseas acceder
+    fieldName = 'ge';
+    
+    % Valor que deseas asignar
+    value = 55;
+    
+    % Acceder y asignar el valor utilizando setfield()
+
+    eval([ fieldName '= struct(''f'',[3 4],''g'',5);'])
+    
+
+
+
+
+    % Crear variables de forma dinámica
+    for i = 1:gen
+
+        g_name{i} = sprintf('g%d', i);
+        eval([ g_name{i} '= struct(''f'',[3 4],''g'',5);']) % XXXXXXXXXXXX==========================================> desde aquí
+
+
+    end
+
+    for i = 1:sen
+
+        s_name{i} = sprintf('s%d', i);
+
+    end
+
+
+
     g1.g_b = g1b; 
     g1.g_e = g1e;
     g2.g_b = g2b; 
@@ -43,6 +101,15 @@ function mb_dp = denseMassBalanceFcn(u, Tbed, Global)
     s2.s_e = s2e;
     s3.s_w = s3w;
     s3.s_e = s3e;
+
+
+% continuar desde aqui % XXXXXXXXXXXX==========================================> desde aquí
+
+
+
+
+
+
 
     id_1 = 'FGBurbuja'; id_2 = 'FGas';
     g1bt = massBalanceFcn(g1, C_gs_dp, Tbed, alpha, ub, db, ... 

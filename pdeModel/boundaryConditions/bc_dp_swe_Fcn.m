@@ -1,34 +1,46 @@
-function [solid, C_s_w, C_s_e] = bc_dp_swe_Fcn(u, Global)
+function [solid, C_s_w, C_s_e] = bc_dp_swe_Fcn(u, reactorType, Global)
+
+% -------------------------------------------------------------------------
+    % bc_dp_swe_Fcn function 
+    % ----------------------------| input |--------------------------------
+    % ----------------------------| output |-------------------------------
+% -------------------------------------------------------------------------
+
+% En este caso se debe introducir la condicion de contorno proveniente del
+% otro reactor, esto se deberá hacer con una función similar al concepto de
+% patrón singleton, toca de revisar para ver como se le hace dinámico    ===================>> revisar
     
-    index1 = Global.n1;
-    id_s_w = 'solid_wake';    
-    id_s_e = 'solid_emulsion';
+    n1              = Global.(reactorType).n1;
+    solidSpecies    = Global.(reactorType).solidSpecies;
+    id_s_w          = 'solid_wake';    
+    id_s_e          = 'solid_emulsion';
+    sen             = Global.(reactorType).sen;
+    out_w           = cell(1, sen);
+    out_e           = cell(1, sen);
+    [out_w{:}]      = assignValuesFcn(u, reactorType, Global, id_s_w);
+    [out_e{:}]      = assignValuesFcn(u, reactorType, Global, id_s_e);
+    variable_name_w = cell(1, sen);
+    variable_name_e = cell(1, sen);
+    C_s_w           = zeros(n1, sen);
+    C_s_e           = zeros(n1, sen);
 
-% ---------- solid - wake phase -------------------------------------------
-    [s1w, s2w, s3w] = assignValuesFcn(u, Global, id_s_w);
-% ---------- solid - emulsion phase ---------------------------------------
-    [s1e, s2e, s3e] = assignValuesFcn(u, Global, id_s_e);
-% ---------- z = 0 solid - wake & emulsion phases -------------------------
-    s1w(1) = s1e(1); 
-    s2w(1) = s2e(1); 
-    s3w(1) = s3e(1);
-% ---------- z = Zg solid - wake & emulsion phases ------------------------
-    s1e(index1) = s1w(index1); 
-    s2e(index1) = s2w(index1);
-    s3e(index1) = s3w(index1);
+% -------------------------------------------------------------------------
 
-    wake.s1w = s1w; 
-    wake.s2w = s2w; 
-    wake.s3w = s3w;
+    for i = 1:sen
 
-    emulsion.s1e = s1e; 
-    emulsion.s2e = s2e; 
-    emulsion.s3e = s3e;
+        out_w{i}(1,1)                       = out_e{i}(1,1);
+        out_e{i}(n1,1)                      = out_w{i}(n1,1);
 
-    solid.wake     = wake; 
-    solid.emulsion = emulsion;
+        variable_name_w{i}                  = sprintf('s%dw', i);
+        variable_name_e{i}                  = sprintf('s%de', i);
 
-    C_s_w = [s1w, s2w, s3w];
-    C_s_e = [s1e, s2e, s3e];
+        solid.wake.(variable_name_w{i})     = out_w{i};
+        solid.emulsion.(variable_name_e{i}) = out_e{i};
+
+        C_s_w(:, i)                         = out_w{i};
+        C_s_e(:, i)                         = out_e{i};
+
+    end
+
 % -------------------------------------------------------------------------
 end

@@ -22,10 +22,12 @@
 % ---------- Implicit (sparse stiff) integration --------------------------
     reltol   = 1.0e-6; abstol = 1.0e-6;  
     options  = odeset('RelTol',reltol,'AbsTol',abstol,'NonNegative',NoN);
-    S        = JPatternFcn(Global);
-    options  = odeset(options,'JPattern',S); 
+
+%     S        = JPatternFcn(Global);
+%     options  = odeset(options,'JPattern',S); 
     
-    % continuar desde aqui XXXXXXXX
+    % continuar desde aqui % XXXXXXXXXXXX==========================================> desde aquí
+    
     pdeModel = @(t,u)pdeFcn(t,u,Global);
     [t,u]    = ode15s(pdeModel,tout,u0,options);  
 % ---------------------------| End Program |-------------------------------
