@@ -17,6 +17,7 @@ function ut = pdeFcn(t,u,Global)
 
 % --------------------| Variables Initial Configuration |------------------
 % ---------- non-negative values check ------------------------------------
+
     u(u < 0) = 0;
 
     n_AR = Global.airReactor .n1*Global.airReactor .Num_sp_dp;
@@ -25,19 +26,17 @@ function ut = pdeFcn(t,u,Global)
 
     u_AR = u(1:n_AR);
     u_FR = u(n_AR + 1:n_AR + n_FR);
+
 % --------------------| Fluidized Bed |------------------------------------ 
 % -------------------------------------------------------------------------
-% continuar desde aqui % XXXXXXXXXXXX==========================================> desde aquí
-
     
 mb_airReactor  = denseMassBalanceFcn(u_AR, Tbed_airReactor,  ...
                                      'airReactor', Global);
 mb_fuelReactor = denseMassBalanceFcn(u_FR, Tbed_fuelReactor, ...
                                      'fuelReactor', Global);
 
-    ut_dp_mb = mb_dp.ut;   
 % --------------------| Temporal Variation Vector dudt |-------------------
-    ut = ut_dp_mb;
+    ut = [mb_airReactor.ut; mb_fuelReactor.ut];
 % --------------------| Number Calls To pdeFcn |---------------------------
     disp([ncall.getNcall, t]);
     ncall.incrementNcall();

@@ -1,4 +1,4 @@
-function kinetic = kineticFcn(C_gas, C_solid, T, Global, id)
+function kinetic = kineticFcn(C_gas, C_solid, T, reactorType, Global, id)
 % -------------------------------------------------------------------------
     % kineticFcn function 
     % ----------------------------| input |--------------------------------
@@ -7,14 +7,15 @@ function kinetic = kineticFcn(C_gas, C_solid, T, Global, id)
     %      C_solid = matrix with the concentrations for ...
     %                each solid specie                            [mol/cm3]
     %           T = phase temperature                                   [K]
+    % reactorType = airReactor | fuelReactor
     %      Global = constant values structure                            []
     %          id = species|reaction identifier                          []
     % ----------------------------| output |-------------------------------
     %     kinetic = reaction rate of each species               [mol/cm3 s]                   
 % -------------------------------------------------------------------------
-    index1  = Global.n1;
-    kinetic = zeros(index1,1);
-    data    = Global.carrier;
+    index1   = Global.(reactorType).n1;
+    kinetic  = zeros(index1,1);
+    data     = Global.carrier;
 % -------------------------------------------------------------------------
     for  i = 1:index1 
 
